@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <style>
+    .test-class{
+      color: blue;
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+    // const TimeDom = () => {
+    //   let time = ''
+    //   let timeFn = () => {
+    //     time = new Date().toLocaleTimeString();
+    //     window.requestAnimationFrame(timeFn)
+    //   }
+    // }
+    const TimeDom = () => {
+      let time = new Date().toLocaleTimeString();
+      ReactDOM.render(
+        <div>
+            <h2>你好：</h2>
+            <h1>
+              时间是: { time }
+            </h1>
+        </div>,
+        document.querySelector('#root')
+      )
+      window.requestAnimationFrame(TimeDom)
+    }
+    TimeDom()
+    </script>
+</body>
+</html>

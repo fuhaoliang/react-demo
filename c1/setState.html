@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <style>
+    .test-class{
+      color: blue;
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+    <div id="root">
+
+    </div>
+    <script type="text/babel">
+      class Element extends React.Component{
+        constructor(props){
+          super(props)
+          this.state = {
+            counter: 0
+          }
+          // this.add = this.add.bind(this)
+        }
+        add (id, e) {
+          console.info('id e', e.target.innerText, id)
+          console.info('this.state', this.state);
+          // let { counter } = this.state
+          // setState 异步
+          // state里面的数据只会在render后才会变更
+          // setState 2种写法
+          // this.setState({
+          //   counter: this.state.counter + this.props.increment
+          // })
+          this.setState((state)=> ({
+            counter: state.counter + 1
+          }))
+          console.info('this.state.counter!!!', this.state.counter);
+        }
+        componentWillUpdate () {
+          console.info('数据变更前', this.state.counter)
+        }
+        componentDidUpdate () {
+          console.info('数据render变更后', this.state.counter)
+        }
+        render() {
+          let { counter } = this.state
+          return <div>
+            <h2 _id="1" onClick={this.add.bind(this, 1111)}>点我+1</h2>
+            <h3>数据:{ counter }</h3>
+          </div>
+        }
+      }
+      ReactDOM.render(
+        <Element increment="10"/>,
+        document.querySelector('#root')
+      )
+    </script>
+</body>
+</html>

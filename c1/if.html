@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <style>
+    .test-class{
+      color: blue;
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+    <div id="root">
+
+    </div>
+    <script type="text/babel">
+      class LoginOut extends React.Component{
+        render(){
+          return <a></a>
+        }
+      }
+
+      class UserGreeting extends React.Component{
+        constructor(props){
+          super(props)
+        }
+        // seeEvent (e) {
+        //   console.info('seeEvent', e.target)
+        // }
+        seeEvent = (e, id) => {
+          console.info('seeEvent', e.target, id)
+        }
+        render () {
+          let { isLoginIn, changeIsLoginIn } = this.props
+          return <h3>
+            welcome back!<br/>
+            <a onClick={ e => this.seeEvent(e, 1111) }>seeEvent</a>
+            <a onClick={ e => changeIsLoginIn(!isLoginIn) }>退出登陆</a>
+          </h3>
+        }
+      }
+      class GreatGreeting extends React.Component{
+        render() {
+          return <h3>pleace Login in !!!</h3>
+        }
+      }
+
+      class Greeting extends React.Component{
+        constructor(props) {
+          super(props)
+          this.state = {
+            isLoginIn: true
+          }
+        }
+
+        changeIsLoginIn = (isLoginIn) => {
+          this.setState((state) => ({isLoginIn}))
+        }
+
+        render(){
+          let { isLoginIn } = this.state
+          if (this.state.isLoginIn) {
+            return <UserGreeting  isLoginIn={this.state.isLoginIn} changeIsLoginIn={this.changeIsLoginIn} />
+          } else {
+            return <GreatGreeting />
+          }
+        }
+      }
+      ReactDOM.render(
+        <Greeting />,
+        document.querySelector('#root')
+      )
+    </script>
+</body>
+</html>
