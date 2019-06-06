@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <style>
+    .stocked span{
+      color: red;
+    }
+    span{
+      display: inline-block;
+      width: 100px;
+      height: 20px;
+      line-height: 20px;
+    }
+  </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+    const arr = [
+      {category: "Sporting Goods", price: "$49.99", stocked: true, name: "Football"},
+      {category: "Sporting Goods", price: "$9.99", stocked: true, name: "Baseball"},
+      {category: "Sporting Goods", price: "$29.99", stocked: false, name: "Basketball"},
+      {category: "Electronics", price: "$99.99", stocked: true, name: "iPod Touch"},
+      {category: "Electronics", price: "$399.99", stocked: false, name: "iPhone 5"},
+      {category: "Electronics", price: "$199.99", stocked: true, name: "Nexus 7"}
+    ];
+    class ProductRow extends React.Component{
+      render () {
+        return (
+          <p className={this.props.className}>
+            <span>{this.props.name}</span>
+            <span>{this.props.price}</span>
+          </p>
+        )
+      }
+    }
+    class ProductTitle extends React.Component{
+      render () {
+        return (
+          <p>{this.props.name}</p>
+        )
+      }
+    }
+
+    class ProductTable extends React.Component{
+      render () {
+        let { arr } = this.props
+        let categoryArr = []
+        categoryArr = arr.map(item => {
+          return item.category
+        })
+        categoryArr = [...new Set(categoryArr)]
+        console.info('categoryArr', categoryArr)
+        let rows = []
+        categoryArr.forEach(categoryItem => {
+          rows.push(
+            <ProductTitle key={categoryItem} name={categoryItem}/>
+          )
+          arr.forEach(arrItem => {
+            if (arrItem.category === categoryItem) rows.push(
+              <ProductRow className={arrItem.stocked ? '' : 'stocked'} key={arrItem.name}  name={arrItem.name} price={arrItem.price} />
+            )
+          });
+        })
+        return (
+          <div>
+            <p className='table-title'>
+              <span>Name</span>
+              <span>Price</span>
+            </p>
+            {rows}
+          </div>
+        )
+      }
+    }
+    class SearchBar extends React.Component{
+      constructor(props){
+        super(props)
+      }
+      handlerChange = (event) => {
+        let { value } = event.target
+        this.props.changeSearchStr(value)
+      }
+      handlerCheckbox = (event) => {
+        let { checked } = event.target
+        this.props.changeCheckbox(checked)
+      }
+      render () {
+        let { stocked, searchStr } = this.props
+        console.info('更新', searchStr, stocked)
+        return (
+          <div>
+            <input type='text' value={searchStr} placeholder="Search..." onChange={this.handlerChange} />
+            <br/>
+            <input type='checkbox' checked={stocked} onChange={this.handlerCheckbox}/>
+            {' '}
+            Only show products in stock
+          </div>
+        )
+      }
+    }
+
+    class Box extends React.Component{
+      constructor(props){
+        super(props)
+        let { arr } = this.props
+        this.state = {
+          searchStr: '',
+          stocked: false,
+          searchArr: arr
+        }
+      }
+      componentWillMount() {
+        let { searchStr, stocked } = this.state
+        this.renderArr(searchStr, stocked)
+      }
+      changeSearchStr = (val) => {
+        let { stocked } = this.state
+        this.setState({ searchStr: val })
+        this.renderArr(val, stocked)
+      }
+      changeCheckbox = (val) => {
+        let { searchStr } = this.state
+        this.setState({ stocked: val })
+        this.renderArr(searchStr, val)
+      }
+      renderArr = (searchStr, stocked) => {
+        let { arr } = this.props
+        let newArr = []
+        newArr = arr.filter(item => {
+          return item.name.indexOf(searchStr) > -1 && (stocked ? item.stocked === true : true)
+        })
+        this.setState({ searchArr: newArr })
+      }
+      render () {
+        let { searchArr, stocked } = this.state
+        console.info('searchArr', searchArr)
+        return (
+          <div>
+            <SearchBar stocked={stocked} changeSearchStr={this.changeSearchStr} changeCheckbox={this.changeCheckbox}/>
+            <ProductTable arr={searchArr}/>
+          </div>
+        )
+      }
+    }
+    ReactDOM.render(
+      <Box arr={arr}/>,
+      document.querySelector('#root')
+    )
+    </script>
+</body>
+</html>
